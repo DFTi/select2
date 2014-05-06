@@ -1201,8 +1201,13 @@ the specific language governing permissions and limitations under the Apache Lic
                 viewportBottom = $window.scrollTop() + windowHeight,
                 dropTop = offset.top + height,
                 dropLeft = offset.left,
-                enoughRoomBelow = dropTop + dropHeight <= viewportBottom,
-                enoughRoomAbove = (offset.top - dropHeight) >= $window.scrollTop(),
+                if (opts.forceDropUp) {
+                  enoughRoomBelow = false;
+                  enoughRoomAbove = true;
+                } else {
+                  enoughRoomBelow = dropTop + dropHeight <= viewportBottom,
+                  enoughRoomAbove = (offset.top - dropHeight) >= $window.scrollTop(),
+                }
                 dropWidth = $dropdown.outerWidth(false),
                 enoughRoomOnRight = dropLeft + dropWidth <= viewPortRight,
                 aboveNow = $dropdown.hasClass("select2-drop-above"),
@@ -1211,6 +1216,12 @@ the specific language governing permissions and limitations under the Apache Lic
                 changeDirection,
                 css,
                 resultsListNode;
+
+
+            if (this.opts.forceDropUp) {
+              enoughRoomBelow = false;
+              enoughRoomAbove = true;
+            }
 
             // always prefer the current above/below alignment, unless there is not enough room
             if (aboveNow) {
@@ -3382,6 +3393,7 @@ the specific language governing permissions and limitations under the Apache Lic
         formatSearching: function () { return "Searching…"; },
         minimumResultsForSearch: 0,
         minimumInputLength: 0,
+        forceDropUp: false,
         maximumInputLength: null,
         maximumSelectionSize: 0,
         id: function (e) { return e == undefined ? null : e.id; },
